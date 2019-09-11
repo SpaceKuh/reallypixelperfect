@@ -1,12 +1,13 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
-[RequireComponent(typeof(InputField))]
-public class SetMovementSpeed : MonoBehaviour
+
+public class SetCameraSpeed : MonoBehaviour
 {
+
     private InputField inputField;
     [SerializeField]
-    private DespairPlayer player;
+    private CameraFollow2D cam;
     private void Awake()
     {
         this.inputField = this.gameObject.GetComponent<InputField>();
@@ -28,12 +29,11 @@ public class SetMovementSpeed : MonoBehaviour
         try
         {
             int newSpeed = Convert.ToInt32(inputField.text);
-            this.player.speed = newSpeed;
+            this.cam.FollowSpeed = newSpeed;
         }
         catch (System.Exception)
         {
 
         }
     }
-
 }

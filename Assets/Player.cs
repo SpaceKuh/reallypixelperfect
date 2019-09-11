@@ -8,14 +8,16 @@ public class Player : MonoBehaviour
     public Transform graphicsTransform;
     public int frameCount = 0;
     public Vector3 realPosition;
+    public bool isMoving = false;
     // Start is called before the first frame update
     void Start()
     {
-        QualitySettings.vSyncCount = 0;
+        QualitySettings.vSyncCount = 1;
         Application.targetFrameRate = 60;
         double d = 1 / 16;
         Debug.Log(d);
-        this.realPosition = this.transform.position;
+        this.realPosition = PixelPerfectClamp(this.transform.position);
+
     }
 
     // Update is called once per frame
@@ -35,10 +37,16 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
             move_vector += Vector3.right;
 
-        // move_vector = move_vector.normalized;
+        if (move_vector != Vector3.zero)
+            isMoving = true;
+        else
+            isMoving = false;
+        move_vector = move_vector.normalized;
+        Debug.Log(move_vector);
         move_vector *= (this.speed * Time.deltaTime);
         this.realPosition += move_vector;
-        this.transform.position = PixelPerfectClamp(this.realPosition);
+        if (isMoving == false)
+            this.transform.position = PixelPerfectClamp(this.realPosition);
 
         // this.transform.Translate(4 * (move_vector * ((float)1 / 16)));
         // this.transform.position = PixelPerfectClamp(this.transform.position);
@@ -65,6 +73,18 @@ public class Player : MonoBehaviour
             Mathf.RoundToInt(move_vector.y * 16),
             0
         );
+
+        return vector_in_pixels / 16;
+    }
+
+    private Vector3 PixelPerfectClampMovement(Vector3 move_vector)
+    {
+        Vector3 vector_in_pixels = new Vector3
+            (
+                Mathf.RoundToInt(move_vector.x * 16),
+                Mathf.RoundToInt(move_vector.y * 16),
+                0
+            );
 
         return vector_in_pixels / 16;
     }
